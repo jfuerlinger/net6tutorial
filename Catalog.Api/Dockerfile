@@ -6,12 +6,12 @@ ENV ASPNET_ENVIRONMENT=http://+:80
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0-focal AS build
 WORKDIR /src
-COPY ["catalog.csproj", "./"]
-RUN dotnet restore "catalog.csproj"
+COPY ["Catalog.Api.csproj", "./"]
+RUN dotnet restore "Catalog.Api.csproj"
 COPY . .
-RUN dotnet publish "catalog.csproj" -c Release -o /app/publish
+RUN dotnet publish "Catalog.Api.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=build /app/publish .
-ENTRYPOINT ["dotnet", "catalog.dll"]
+ENTRYPOINT ["dotnet", "Catalog.Api.dll"]

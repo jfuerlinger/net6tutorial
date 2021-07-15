@@ -6,7 +6,7 @@ spec:
   selector:
     matchLabels:
       app: catalog
-  replicas: 3
+  replicas: 10
   template:
     metadata:
       labels:
@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: catalog
-          image: jfuerlinger/catalog:v4
+          image: crjfuerlinger.azurecr.io/catalog:v5
           resources:
             limits:
               memory: "128Mi"
