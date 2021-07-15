@@ -11,8 +11,9 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker build . --file ./Catalog.Api/Dockerfile --tag jfuerlinger/catalog:$(date +%s)
+      run: docker build ./Catalog.Api/ --file ./Catalog.Api/Dockerfile --tag jfuerlinger/catalog:$(date +%s)
+      
