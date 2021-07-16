@@ -1,24 +1,19 @@
-name: .NET
+name: Az Management
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
-  vm:
-    runs-on: ubuntu-latest
-    steps:
-      - run: |
-          echo This job does not specify a container.
-          echo It runs directly on the virtual machine.
-        name: Run on VM
+  
   container:
     runs-on: ubuntu-latest
-    container: node:10.16-jessie
+    container: mcr.microsoft.com/azure-cli:latest
     steps:
       - run: |
-          echo This job does specify a container.
-          echo It runs in the container instead of the VM.
+          az login --service-principal --username ${{ secrets.AZURE_USERNAME }} --password ${{ secrets.AZURE_USERNAME }} --tenant ${{ secrets.AZURE_TENANT }} --output none
+          echo 'Fetching cluster status ...'
+          az aks show --name k8s-cluster-01 --resource-group kubernetes-gettingstarted-rg --query 'powerState.code' -o json
         name: Run in container
+
+
+#docker run -it mcr.microsoft.com/azure-cli /bin/bash -c "az login --service-principal --username http://e0f2ee08-c641-4f9b-944d-9f59668daaa0 --password DT6.kZ~GPg-CeEv89a1BQQd4~j5E6rU6_A --tenant 4fa22c8d-4fb5-42ff-9e3d-1ff5770adce1 --output none; echo 'Fetching cluster status ...'; az aks show --name k8s-cluster-01 --resource-group kubernetes-gettingstarted-rg --query 'powerState.code' -o json"
