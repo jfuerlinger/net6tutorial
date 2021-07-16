@@ -11,8 +11,12 @@ jobs:
     steps:
       - run: |
           az login --service-principal --username ${{ secrets.AZURE_USERNAME }} --password ${{ secrets.AZURE_PASSWORD }} --tenant ${{ secrets.AZURE_TENANT }} --output none
+          echo 'Starting the cluster ...'
+          az aks start --name k8s-cluster-01 --resource-group kubernetes-gettingstarted-rg
           echo 'Fetching cluster status ...'
           az aks show --name k8s-cluster-01 --resource-group kubernetes-gettingstarted-rg --query 'powerState.code' -o json
+          echo 'Stoping the cluster ...'
+          az aks stop --name k8s-cluster-01 --resource-group kubernetes-gettingstarted-rg
         name: Run in container
 
 
