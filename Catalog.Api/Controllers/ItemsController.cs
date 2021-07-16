@@ -44,6 +44,8 @@ namespace Catalog.Api.Controllers
 
             if (item is null)
             {
+                _logger.LogWarning($"{DateTime.UtcNow.ToString("hh:mm:ss")}: The id {id} does not exist!");
+
                 return NotFound();
             }
 
