@@ -24,3 +24,7 @@ az aks stop --name k8s-cluster-01 --resource-group kubernetes-gettingstarted-rg
 ```ps
 az aks show --name k8s-cluster-01 --resource-group kubernetes-gettingstarted-rg | ConvertFrom-Json | Select-Object Powerstate
 ```
+
+## Setup script
+
+[Setup](https://gist.github.com/jfuerlinger/e0b4eca486c311451e17dfebe354bd9a)
