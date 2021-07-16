@@ -1,5 +1,10 @@
 # .net core 6.0 tutorial with kubernetes
 
+## Pipeline
+
+[![Docker Image CI](https://github.com/jfuerlinger/net6tutorial/actions/workflows/build-and-deploy.yml/badge.svg)](https://github.com/jfuerlinger/net6tutorial/actions/workflows/build-and-deploy.yml)
+
+
 ## Commands
 
 ### Start the aks cluster
