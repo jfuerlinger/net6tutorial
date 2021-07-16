@@ -2,8 +2,13 @@ name: Docker Image CI
 
 on:
   push:
+    paths:
+      - 'Catalog.Api/**'
     branches: [ main ]
+        
   pull_request:
+    paths:
+      - 'Catalog.Api/**'
     branches: [ main ]
 
 jobs:
