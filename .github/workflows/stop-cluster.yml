@@ -2,7 +2,7 @@ name: stop-cluster
 
 on:
   schedule:
-    - cron: '59 23 * * *'
+    - cron: '59 19 * * *'
   workflow_dispatch:
   
 jobs:
