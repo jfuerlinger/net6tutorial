@@ -1,0 +1,21 @@
+name: Stop the cluster
+
+on:
+  workflow_dispatch:
+
+jobs:
+  
+  container:
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/azure-cli:latest
+    steps:
+      - run: |
+          az login --service-principal --username ${{ secrets.AZURE_USERNAME }} --password ${{ secrets.AZURE_PASSWORD }} --tenant ${{ secrets.AZURE_TENANT }} --output none         
+          echo 'Fetching cluster status ...'
+          CLUSTER_STATE=`az aks show --name k8s-cluster-01 --resource-group kubernetes-gettingstarted-rg --query 'powerState.code' -o json`
+          echo $CLUSTER_STATE
+          if [ "$CLUSTER_STATE" = "\"Stopped\"" ]; then
+            echo "Starting the container ..."
+            az aks start --name k8s-cluster-01 --resource-group kubernetes-gettingstarted-rg
+            echo " >> DONE"
+        name: Run in container
