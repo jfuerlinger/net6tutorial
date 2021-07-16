@@ -14,7 +14,7 @@ jobs:
           echo 'Fetching cluster status ...'
           CLUSTER_STATE=`az aks show --name k8s-cluster-01 --resource-group kubernetes-gettingstarted-rg --query 'powerState.code' -o json`
           echo $CLUSTER_STATE
-          if [ "$CLUSTER_STATE" = "Stopped" ]; then
+          if [ "$CLUSTER_STATE" = "\"Stopped\"" ]; then
             echo "Starting the container."
           else
             echo "Stopping the container."
