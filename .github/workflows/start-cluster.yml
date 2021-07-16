@@ -18,4 +18,5 @@ jobs:
             echo "Starting the container ..."
             az aks start --name k8s-cluster-01 --resource-group kubernetes-gettingstarted-rg
             echo " >> DONE"
+          fi
         name: Run in container
