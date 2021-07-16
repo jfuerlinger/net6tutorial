@@ -1,4 +1,4 @@
-name: Stop the cluster
+name: start-cluster
 
 on:
   workflow_dispatch:
