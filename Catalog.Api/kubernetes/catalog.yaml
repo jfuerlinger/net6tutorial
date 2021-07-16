@@ -6,7 +6,7 @@ spec:
   selector:
     matchLabels:
       app: catalog
-  replicas: 10
+  replicas: 2
   template:
     metadata:
       labels:
@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: catalog
-          image: crjfuerlinger.azurecr.io/catalog:v5
+          image: crjfuerlinger.azurecr.io/catalog:latest
           resources:
             limits:
               memory: "128Mi"
@@ -37,6 +37,8 @@ spec:
             httpGet:
               path: /health/ready
               port: 80
+      imagePullSecrets:
+        - name: acr-secret
 
 ---
 apiVersion: v1
