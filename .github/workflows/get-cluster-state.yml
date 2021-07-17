@@ -1,6 +1,10 @@
 name: get-cluster-state
 on:
   workflow_dispatch:
+  workflow_run:
+    workflows: ["start-cluster", "stop-cluster"]
+    types:
+      - completed
 
 jobs:
   
