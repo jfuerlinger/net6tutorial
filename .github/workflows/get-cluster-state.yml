@@ -8,9 +8,18 @@ jobs:
     runs-on: ubuntu-latest
     container: mcr.microsoft.com/azure-cli:latest
     steps:
+      - name: Notify me
+        uses: fjogeleit/http-request-action@v1.8.0
+        with:
+          url: https://prod-36.westeurope.logic.azure.com:443/workflows/04877f840b8d43a292e2ec7b45e64d07/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=wVrZbMBlRSJWy2FPb7qe-DjK9cqJlLoTPI94ILXhlbM
+          # Request Method
+          method: POST
+          data: '{ "state": "Stopped" }'
+
       - run: |
           az login --service-principal --username ${{ secrets.AZURE_USERNAME }} --password ${{ secrets.AZURE_PASSWORD }} --tenant ${{ secrets.AZURE_TENANT }} --output none         
           echo 'Fetching cluster status ...'
           CLUSTER_STATE=`az aks show --name k8s-cluster-01 --resource-group kubernetes-gettingstarted-rg --query 'powerState.code' -o json`
           echo $CLUSTER_STATE          
         name: Run in container
+         
