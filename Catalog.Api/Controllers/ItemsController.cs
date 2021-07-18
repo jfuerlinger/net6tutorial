@@ -23,7 +23,6 @@ namespace Catalog.Api.Controllers
             this._logger = logger;
         }
 
-        // GET /items
         [HttpGet]
         public async Task<IEnumerable<ItemDto>> GetItemsAsync()
         {
@@ -52,7 +51,6 @@ namespace Catalog.Api.Controllers
             return item.AsDto();
         }
 
-        // POST /items
         [HttpPost]
         public async Task<ActionResult<ItemDto>> CreateItemAsync(CreateItemDto itemDto)
         {
@@ -69,7 +67,6 @@ namespace Catalog.Api.Controllers
             return CreatedAtAction(nameof(GetItemAsync), new { id = item.Id }, item.AsDto());
         }
 
-        // PUT /items/{id}
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateItemAsync(Guid id, UpdateItemDto itemDto)
         {
@@ -92,7 +89,6 @@ namespace Catalog.Api.Controllers
         }
 
 
-        // DELETE /items/{id}
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteItemAsync(Guid id)
         {
