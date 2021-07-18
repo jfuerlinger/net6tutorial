@@ -28,3 +28,8 @@ az aks show --name k8s-cluster-01 --resource-group kubernetes-gettingstarted-rg 
 ## Setup script
 
 [Setup](https://gist.github.com/jfuerlinger/e0b4eca486c311451e17dfebe354bd9a)
+
+
+## Resources
+
+* [Flux - Getting Started](https://fluxcd.io/docs/get-started/)
