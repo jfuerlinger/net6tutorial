@@ -72,5 +72,5 @@ jobs:
           dotnet test Catalog.Api.Test/Catalog.Api.Test.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
           # dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}" 
           ls -al ${{github.workspace}}
-          ls - al Catalog.Api.Test/
+          ls -al Catalog.Api.Test/
         
