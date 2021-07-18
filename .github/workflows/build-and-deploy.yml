@@ -67,9 +67,9 @@ jobs:
       - name: SonarCloud Scan
         run: |
           # dotnet tool install --global dotnet-sonarscanner
-          # dotnet sonarscanner begin /k:"jfuerlinger_net6tutorial" /o:"github-jfuerlinger" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.opencover.reportsPaths="coverage.opencover.xml" /d:sonar.coverage.exclusions="**Tests*.cs"
+          # dotnet sonarscanner begin /k:"jfuerlinger_net6tutorial" /o:"github-jfuerlinger" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.opencover.reportsPaths="${{github.workspace}}/coverage.opencover.xml" /d:sonar.coverage.exclusions="**Tests*.cs"
           dotnet build ./Catalog.Api/Catalog.Api.csproj
-          dotnet test Catalog.Api.Test/Catalog.Api.Test.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput='../coverage.opencover.xml' 
+          dotnet test Catalog.Api.Test/Catalog.Api.Test.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput='${{github.workspace}}/coverage.opencover.xml' 
           # dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}" 
           ls -al ${{github.workspace}}
           ls -al Catalog.Api.Test/
