@@ -1,5 +1,11 @@
 # .net core 6.0 tutorial with kubernetes
 
+## Quality
+
+The quality of the source is checked by SonarQube which is hosted by sonarcloud:
+
+[Dashboard](https://sonarcloud.io/project/overview?id=jfuerlinger_net6tutorial)
+
 ## Pipeline
 
 [![Docker Image CI](https://github.com/jfuerlinger/net6tutorial/actions/workflows/build-and-deploy.yml/badge.svg)](https://github.com/jfuerlinger/net6tutorial/actions/workflows/build-and-deploy.yml)
