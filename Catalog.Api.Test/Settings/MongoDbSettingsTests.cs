@@ -28,7 +28,7 @@ namespace Catalog.Api.Test.Settings
 
             // Assert
             Assert.IsNotNull(connectionString);
-            Assert.AreEqual(connectionString, "mongodb://user1:password@localhost:80");
+            Assert.AreEqual("mongodb://user1:password@localhost:80", connectionString);
         }
     }
 }

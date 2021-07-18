@@ -23,7 +23,7 @@ namespace Catalog.Api.Test.Repositories
 
             // Assert
             Assert.IsNotNull(items);
-            Assert.AreEqual(items.Count(), 3);
+            Assert.AreEqual(3, items.Count());
         }
 
         [TestMethod]
