@@ -1,7 +1,9 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Catalog.Api.Entities
 {
+    [ExcludeFromCodeCoverage]
     public record Item
     {
         public Guid Id { get; init; }

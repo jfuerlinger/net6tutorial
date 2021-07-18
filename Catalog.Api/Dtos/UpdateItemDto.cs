@@ -1,7 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Catalog.Api.Dtos
 {
+    [ExcludeFromCodeCoverage]
     public record UpdateItemDto
     {
         [Required]

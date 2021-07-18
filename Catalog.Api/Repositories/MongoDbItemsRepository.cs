@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Catalog.Api.Entities;
 using MongoDB.Bson;
@@ -7,6 +8,7 @@ using MongoDB.Driver;
 
 namespace Catalog.Api.Repositories
 {
+    [ExcludeFromCodeCoverage]
     public class MongoDbItemsRepository : IItemsRepository
     {
         private const string databaseName = "catalog";
