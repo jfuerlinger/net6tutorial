@@ -10,6 +10,7 @@ on:
     paths:
       - 'Catalog.Api/**'
     branches: [ main ]
+    types: [opened, synchronize, reopened]
 
 jobs:
 
@@ -20,6 +21,8 @@ jobs:
     steps:
     - name: 'Checkout GitHub Action'
       uses: actions/checkout@main
+      with:
+        fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
     - name: 'Login via Azure CLI'
       uses: azure/login@v1
@@ -36,3 +39,14 @@ jobs:
     - run: |
         docker build ./Catalog.Api --file ./Catalog.Api/Dockerfile --tag ${{ secrets.REGISTRY_LOGIN_SERVER }}/catalog:latest
         docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/catalog:latest
+        
+  sonarcloud:
+    name: SonarCloud
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2      
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
