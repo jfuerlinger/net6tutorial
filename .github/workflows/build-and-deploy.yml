@@ -43,7 +43,7 @@ jobs:
         docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/catalog:latest
         
   sonarcloud:
-    name: SonarCloud
+    name: analyse-source
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2      
