@@ -43,8 +43,13 @@ jobs:
         docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/catalog:latest
         
   sonarcloud:
+  
     name: analyse-source
     runs-on: ubuntu-latest
+    
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
     steps:
       - uses: actions/checkout@v2      
 
