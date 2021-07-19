@@ -237,5 +237,57 @@ namespace Catalog.Api.Test.Controllers
             Assert.AreEqual(noContentResult.StatusCode, StatusCodes.Status204NoContent);
             Assert.AreEqual(notFoundResult.StatusCode, StatusCodes.Status404NotFound);
         }
+
+        [TestMethod]
+        public async Task DeleteItemAsync_CallWithUnknownId_ShouldReturnNoFound()
+        {
+            // Arrange
+            Dictionary<Guid, Item> items = new();
+
+            var itemsRepositoryMock = new Mock<IItemsRepository>();
+            itemsRepositoryMock
+                .Setup(foo => foo.CreateItemAsync(It.IsNotNull<Item>()))
+                .Returns<Item>((item) =>
+                {
+                    items[item.Id] = item;
+                    return Task.CompletedTask;
+                });
+
+            itemsRepositoryMock
+                .Setup(foo => foo.GetItemAsync(It.IsNotNull<Guid>()))
+                .Returns<Guid>((id) =>
+                {
+                    if (items.ContainsKey(id))
+                    {
+                        return Task.FromResult(items[id]);
+                    }
+                    else
+                    {
+                        return Task.FromResult(default(Item));
+                    }
+                });
+
+            itemsRepositoryMock
+                .Setup(foo => foo.DeleteItemAsync(It.IsNotNull<Guid>()))
+                .Returns<Guid>((id) =>
+                {
+                    items.Remove(id);
+                    return Task.CompletedTask;
+                });
+
+
+            var loggerMock = new Mock<ILogger<ItemsController>>();
+
+            var controller = new ItemsController(
+                itemsRepositoryMock.Object,
+                loggerMock.Object);
+
+            // Act
+            var notFoundResult = await controller.DeleteItemAsync(Guid.NewGuid()) as NotFoundResult;
+
+            // Assert
+            Assert.IsNotNull(notFoundResult);
+            Assert.AreEqual(StatusCodes.Status404NotFound, notFoundResult.StatusCode);
+        }
     }
 }
