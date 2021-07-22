@@ -20,9 +20,17 @@ The quality of the source is checked by SonarQube which is hosted by sonarcloud:
 
 [Dashboard](https://sonarcloud.io/project/overview?id=jfuerlinger_net6tutorial)
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=jfuerlinger_net6tutorial&metric=alert_status)](https://sonarcloud.io/dashboard?id=jfuerlinger_net6tutorial)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=jfuerlinger_net6tutorial&metric=coverage)](https://sonarcloud.io/dashboard?id=jfuerlinger_net6tutorial)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=jfuerlinger_net6tutorial&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=jfuerlinger_net6tutorial)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=jfuerlinger_net6tutorial&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=jfuerlinger_net6tutorial)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=jfuerlinger_net6tutorial&metric=bugs)](https://sonarcloud.io/dashboard?id=jfuerlinger_net6tutorial)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=jfuerlinger_net6tutorial&metric=code_smells)](https://sonarcloud.io/dashboard?id=jfuerlinger_net6tutorial)
+
 ## Pipeline
 
 [![Docker Image CI](https://github.com/jfuerlinger/net6tutorial/actions/workflows/build-and-deploy.yml/badge.svg)](https://github.com/jfuerlinger/net6tutorial/actions/workflows/build-and-deploy.yml)
+
 
 
 ## Commands
