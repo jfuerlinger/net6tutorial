@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
         - name: catalog
-          image: crjfuerlinger.azurecr.io/catalog:latest
+          image: jfuerlinger.azurecr.io/catalog:latest
+          # image: crjfuerlinger.azurecr.io/catalog:latest          
           resources:
             limits:
               memory: "128Mi"
@@ -37,8 +38,8 @@ spec:
             httpGet:
               path: /health/ready
               port: 80
-      imagePullSecrets:
-        - name: acr-secret
+      # imagePullSecrets:
+      #   - name: acr-secret
 
 ---
 apiVersion: v1
