@@ -1,5 +1,17 @@
 # .net core 6.0 tutorial with kubernetes
 
+- [.net core 6.0 tutorial with kubernetes](#net-core-60-tutorial-with-kubernetes)
+  - [Quality](#quality)
+  - [Pipeline](#pipeline)
+  - [Commands](#commands)
+    - [Start the aks cluster](#start-the-aks-cluster)
+    - [Stop the aks cluster](#stop-the-aks-cluster)
+    - [Get the state of the aks cluster](#get-the-state-of-the-aks-cluster)
+    - [Switch between kubernetes contexts](#switch-between-kubernetes-contexts)
+  - [Setup script](#setup-script)
+  - [Resources](#resources)
+
+
 ## Quality
 
 The quality of the source is checked by SonarQube which is hosted by sonarcloud:
@@ -31,6 +43,13 @@ az aks stop --name k8s-cluster-01 --resource-group kubernetes-gettingstarted-rg
 az aks show --name k8s-cluster-01 --resource-group kubernetes-gettingstarted-rg | ConvertFrom-Json | Select-Object Powerstate
 ```
 
+### Switch between kubernetes contexts
+
+```ps
+kubectl config set-context docker-desktop
+kubectl config set-context k8s-cluster-01
+```
+
 ## Setup script
 
 [Setup](https://gist.github.com/jfuerlinger/e0b4eca486c311451e17dfebe354bd9a)
@@ -39,3 +58,4 @@ az aks show --name k8s-cluster-01 --resource-group kubernetes-gettingstarted-rg 
 ## Resources
 
 * [Flux - Getting Started](https://fluxcd.io/docs/get-started/)
+* [kubectl Spickzettel](https://kubernetes.io/de/docs/reference/kubectl/cheatsheet/)
