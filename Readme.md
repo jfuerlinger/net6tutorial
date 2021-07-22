@@ -8,6 +8,8 @@
     - [Stop the aks cluster](#stop-the-aks-cluster)
     - [Get the state of the aks cluster](#get-the-state-of-the-aks-cluster)
     - [Switch between kubernetes contexts](#switch-between-kubernetes-contexts)
+      - [-> Context: docker-desktop](#--context-docker-desktop)
+      - [-> Context: k8s-cluster-01](#--context-k8s-cluster-01)
   - [Setup script](#setup-script)
   - [Resources](#resources)
 
@@ -45,9 +47,16 @@ az aks show --name k8s-cluster-01 --resource-group kubernetes-gettingstarted-rg 
 
 ### Switch between kubernetes contexts
 
+#### -> Context: docker-desktop
+
 ```ps
-kubectl config set-context docker-desktop
-kubectl config set-context k8s-cluster-01
+kubectl config use-context docker-desktop
+```
+
+#### -> Context: k8s-cluster-01
+
+```ps
+kubectl config use-context k8s-cluster-01
 ```
 
 ## Setup script
