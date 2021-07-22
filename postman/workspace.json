@@ -1,0 +1,118 @@
+{
+  "info": {
+    "_postman_id": "4576eb24-f1fa-464c-9550-8e71429a0649",
+    "name": "net6-tutorial",
+    "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET Items",
+      "_postman_id": "0941b148-86af-4caf-9a1d-55c5b2e52319",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "http://localhost:80/items"
+      },
+      "response": []
+    },
+    {
+      "name": "GET ItemById",
+      "_postman_id": "4de2e70c-4367-450a-94ce-16962214f841",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "https://localhost:5001/items/ce1de138-d2a8-43c7-8da0-392b4cdbd48b"
+      },
+      "response": []
+    },
+    {
+      "name": "DELETE ItemById",
+      "_postman_id": "095431a7-138d-4420-b12e-5a9960e189b8",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "https://localhost:5001/items/ce1de138-d2a8-43c7-8da0-392b4cdbd48b"
+      },
+      "response": []
+    },
+    {
+      "name": "POST Item",
+      "_postman_id": "7f9d1383-3719-48eb-9b84-dad4f5e07903",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"Great axe\",\r\n    \"price\": 20\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "http://localhost:80/items"
+      },
+      "response": []
+    },
+    {
+      "name": "PUT Item",
+      "_postman_id": "75d74bc4-ac2b-4fe7-82d6-df12e2e9a495",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"Platinum sword\",\r\n    \"price\": 75\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "https://localhost:5001/items/ce1de138-d2a8-43c7-8da0-392b4cdbd48b"
+      },
+      "response": []
+    },
+    {
+      "name": "Health Check (ready)",
+      "_postman_id": "e1839126-4377-416a-9f19-a4c971d7d2fe",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "https://localhost:5001/health/ready"
+      },
+      "response": []
+    },
+    {
+      "name": "Health Check (live)",
+      "_postman_id": "8fd73252-e6d5-484b-9597-f220e9662189",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "https://localhost:5001/health/live"
+      },
+      "response": []
+    }
+  ]
+}
