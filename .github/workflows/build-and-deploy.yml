@@ -5,7 +5,10 @@ on:
   
   push:
     paths:
+      - 'Catalog.Core*/**'
+      - 'Catalog.Persistence*/**'
       - 'Catalog.Api*/**'
+      
     branches: [ main ]
         
   pull_request:
