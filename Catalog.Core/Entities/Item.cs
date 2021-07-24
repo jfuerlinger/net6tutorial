@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Catalog.Api.Entities
+namespace Catalog.Core.Entities
 {
     [ExcludeFromCodeCoverage]
     public record Item

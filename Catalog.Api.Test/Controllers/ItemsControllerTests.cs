@@ -7,13 +7,14 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
 using Catalog.Api.Controllers;
-using Catalog.Api.Entities;
-using Catalog.Api.Repositories;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Mvc;
 using Catalog.Api.Dtos;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
+using Catalog.Core.Repositories;
+using Catalog.Core.Entities;
+using Microsoft.FeatureManagement;
 
 namespace Catalog.Api.Test.Controllers
 {
@@ -37,10 +38,12 @@ namespace Catalog.Api.Test.Controllers
                 .Returns(items);
 
             var loggerMock = new Mock<ILogger<ItemsController>>();
+            var featureManagerMock = new Mock<IFeatureManager>();
 
             var controller = new ItemsController(
-                itemsRepositoryMock.Object,
-                loggerMock.Object);
+                loggerMock.Object,
+                featureManagerMock.Object,
+                itemsRepositoryMock.Object);
 
             // Act
             var result = await controller.GetItemsAsync();
@@ -65,10 +68,12 @@ namespace Catalog.Api.Test.Controllers
                 .Returns<Guid>((id) => Task.FromResult(items.FirstOrDefault(item => item.Id == id)));
 
             var loggerMock = new Mock<ILogger<ItemsController>>();
+            var featureManagerMock = new Mock<IFeatureManager>();
 
             var controller = new ItemsController(
-                itemsRepositoryMock.Object,
-                loggerMock.Object);
+                loggerMock.Object,
+                featureManagerMock.Object,
+                itemsRepositoryMock.Object);
 
             // Act
             var result = await controller.GetItemAsync(items.ElementAt(1).Id);
@@ -102,10 +107,12 @@ namespace Catalog.Api.Test.Controllers
                 .Returns<Guid>(id => Task.FromResult(items.FirstOrDefault(item => item.Id == id)));
 
             var loggerMock = new Mock<ILogger<ItemsController>>();
+            var featureManagerMock = new Mock<IFeatureManager>();
 
             var controller = new ItemsController(
-                itemsRepositoryMock.Object,
-                loggerMock.Object);
+                loggerMock.Object,
+                featureManagerMock.Object,
+                itemsRepositoryMock.Object);
 
             // Act
             var result = await controller.GetItemAsync(Guid.NewGuid());
@@ -141,10 +148,12 @@ namespace Catalog.Api.Test.Controllers
                 });
 
             var loggerMock = new Mock<ILogger<ItemsController>>();
+            var featureManagerMock = new Mock<IFeatureManager>();
 
             var controller = new ItemsController(
-                itemsRepositoryMock.Object,
-                loggerMock.Object);
+                loggerMock.Object,
+                featureManagerMock.Object,
+                itemsRepositoryMock.Object);
 
             // Act
             var result = await controller.CreateItemAsync(createItemDto);
@@ -210,10 +219,16 @@ namespace Catalog.Api.Test.Controllers
 
 
             var loggerMock = new Mock<ILogger<ItemsController>>();
+            
+            var featureManagerMock = new Mock<IFeatureManager>();
+            featureManagerMock
+                .Setup(foo => foo.IsEnabledAsync(It.IsAny<string>()))
+                .Returns<string>(featureName => featureName == "DeleteItemEnabled" ? Task.FromResult(true) : Task.FromResult(false));
 
             var controller = new ItemsController(
-                itemsRepositoryMock.Object,
-                loggerMock.Object);
+                loggerMock.Object,
+                featureManagerMock.Object,
+                itemsRepositoryMock.Object);
 
             var result = await controller.CreateItemAsync(createItemDto);
             var createdAtActionResult = result.Result as CreatedAtActionResult;
@@ -278,9 +293,15 @@ namespace Catalog.Api.Test.Controllers
 
             var loggerMock = new Mock<ILogger<ItemsController>>();
 
+            var featureManagerMock = new Mock<IFeatureManager>();
+            featureManagerMock
+                .Setup(foo => foo.IsEnabledAsync(It.IsAny<string>()))
+                .Returns<string>(featureName => featureName == "DeleteItemEnabled" ? Task.FromResult(true) : Task.FromResult(false));
+
             var controller = new ItemsController(
-                itemsRepositoryMock.Object,
-                loggerMock.Object);
+                loggerMock.Object,
+                featureManagerMock.Object,
+                itemsRepositoryMock.Object);
 
             // Act
             var notFoundResult = await controller.DeleteItemAsync(Guid.NewGuid()) as NotFoundResult;
@@ -329,10 +350,12 @@ namespace Catalog.Api.Test.Controllers
 
 
             var loggerMock = new Mock<ILogger<ItemsController>>();
+            var featureManagerMock = new Mock<IFeatureManager>();
 
             var controller = new ItemsController(
-                itemsRepositoryMock.Object,
-                loggerMock.Object);
+                loggerMock.Object,
+                featureManagerMock.Object,
+                itemsRepositoryMock.Object);
 
             // Act
             var notFoundResult = await controller.UpdateItemAsync(Guid.NewGuid(), new UpdateItemDto()) as NotFoundResult;

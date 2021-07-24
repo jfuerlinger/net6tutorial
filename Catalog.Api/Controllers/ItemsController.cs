@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Catalog.Api.Repositories;
 using Catalog.Api.Dtos;
-using Catalog.Api.Entities;
 using Microsoft.FeatureManagement;
+using Microsoft.FeatureManagement.Mvc;
+using Catalog.Core.Repositories;
+using Catalog.Core.Entities;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Catalog.Api.Controllers
 {
@@ -97,8 +99,15 @@ namespace Catalog.Api.Controllers
 
 
         [HttpDelete("{id}")]
+        [FeatureGate("DeleteItemEnabled")]
         public async Task<ActionResult> DeleteItemAsync(Guid id)
         {
+            bool isDeleteItemEnabled = await _featureManager.IsEnabledAsync("DeleteItemEnabled");
+            if(!isDeleteItemEnabled)
+            {
+                return BadRequest("This feature ist not released yet!");
+            }
+
 
             var existingItem = await _repository.GetItemAsync(id);
             if (existingItem is null)

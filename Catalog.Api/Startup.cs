@@ -3,8 +3,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Mime;
 using System.Text.Json;
-using Catalog.Api.Repositories;
 using Catalog.Api.Settings;
+using Catalog.Core.Repositories;
+using Catalog.Persistence.MongoDb;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
@@ -12,6 +13,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.FeatureManagement;
 using Microsoft.OpenApi.Models;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
@@ -43,6 +45,8 @@ namespace catalog
             });
 
             services.AddSingleton<IItemsRepository, MongoDbItemsRepository>();
+
+            services.AddFeatureManagement();
 
             services.AddControllers(options =>
             {

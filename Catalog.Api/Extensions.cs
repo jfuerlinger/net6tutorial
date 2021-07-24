@@ -1,12 +1,10 @@
 using Catalog.Api.Dtos;
-using Catalog.Api.Entities;
+using Catalog.Core.Entities;
 
 namespace Catalog.Api
 {
-
     public static class Extensions
     {
-
         public static ItemDto AsDto(this Item item)
         {
             return new ItemDto
@@ -17,6 +15,5 @@ namespace Catalog.Api
                 CreatedDate = item.CreatedDate
             };
         }
-
     }
 }
