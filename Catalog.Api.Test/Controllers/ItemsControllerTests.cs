@@ -254,6 +254,32 @@ namespace Catalog.Api.Test.Controllers
         }
 
         [TestMethod]
+        public async Task DeleteItemAsync_CallWithFeatureDisabled_ShouldReturnBadRequest()
+        {
+            // Arrange
+            var itemsRepositoryMock = new Mock<IItemsRepository>();
+            var loggerMock = new Mock<ILogger<ItemsController>>();
+            
+            var featureManagerMock = new Mock<IFeatureManager>();
+            featureManagerMock
+                .Setup(foo => foo.IsEnabledAsync(It.IsAny<string>()))
+                .Returns<string>(featureName => Task.FromResult(false));
+
+            var controller = new ItemsController(
+                loggerMock.Object,
+                featureManagerMock.Object,
+                itemsRepositoryMock.Object);
+
+            // Act
+            var badRequestObjectResult = await controller.DeleteItemAsync(Guid.NewGuid()) as BadRequestObjectResult;
+            
+            // Assert
+            Assert.IsNotNull(badRequestObjectResult);
+            Assert.AreEqual(StatusCodes.Status400BadRequest, badRequestObjectResult.StatusCode);
+            Assert.AreEqual("This feature ist not released yet!", badRequestObjectResult.Value);
+        }
+
+        [TestMethod]
         public async Task DeleteItemAsync_CallWithUnknownId_ShouldReturnNoFound()
         {
             // Arrange
