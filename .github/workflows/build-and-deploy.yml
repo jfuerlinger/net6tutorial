@@ -37,7 +37,7 @@ jobs:
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
     - run: |
-        docker build --tag ${{ secrets.REGISTRY_LOGIN_SERVER }}/catalog:latest
+        docker build . --tag ${{ secrets.REGISTRY_LOGIN_SERVER }}/catalog:latest
         docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/catalog:latest
         
   sonarcloud:
