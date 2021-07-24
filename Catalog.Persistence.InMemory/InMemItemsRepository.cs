@@ -1,12 +1,14 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using Catalog.Api.Entities;
 using System.Threading.Tasks;
+using Catalog.Core.Repositories;
+using Catalog.Core.Entities;
+using System.Diagnostics.CodeAnalysis;
 
-namespace Catalog.Api.Repositories
+namespace Catalog.Persistence.InMemory
 {
-
+    [ExcludeFromCodeCoverage]
     public class InMemItemsRepository : IItemsRepository
     {
         private readonly List<Item> items = new()

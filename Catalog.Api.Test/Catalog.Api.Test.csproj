@@ -19,6 +19,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Catalog.Api\Catalog.Api.csproj" />
+    <ProjectReference Include="..\Catalog.Core\Catalog.Core.csproj" />
+    <ProjectReference Include="..\Catalog.Persistence.InMemory\Catalog.Persistence.InMemory.csproj" />
   </ItemGroup>
 
 </Project>

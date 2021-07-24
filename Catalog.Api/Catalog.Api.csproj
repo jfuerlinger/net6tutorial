@@ -7,8 +7,14 @@
 
   <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.MongoDb" Version="5.0.1" />
+    <PackageReference Include="Microsoft.FeatureManagement.AspNetCore" Version="2.3.0" />
     <PackageReference Include="MongoDB.Driver" Version="2.12.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Catalog.Core\Catalog.Core.csproj" />
+    <ProjectReference Include="..\Catalog.Persistence.MongoDb\Catalog.Persistence.MongoDb.csproj" />
   </ItemGroup>
 
 </Project>

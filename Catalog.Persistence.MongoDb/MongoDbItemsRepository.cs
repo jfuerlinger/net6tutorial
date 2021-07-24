@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using Catalog.Api.Entities;
+using Catalog.Core.Entities;
+using Catalog.Core.Repositories;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace Catalog.Api.Repositories
+namespace Catalog.Persistence.MongoDb
 {
     [ExcludeFromCodeCoverage]
     public class MongoDbItemsRepository : IItemsRepository

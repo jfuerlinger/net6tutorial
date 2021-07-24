@@ -1,4 +1,4 @@
-﻿using Catalog.Api.Entities;
+﻿using Catalog.Core.Entities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Diagnostics.CodeAnalysis;

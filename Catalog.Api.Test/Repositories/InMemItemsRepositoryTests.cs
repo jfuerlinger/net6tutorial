@@ -1,10 +1,9 @@
-﻿using Catalog.Api.Entities;
-using Catalog.Api.Repositories;
+﻿using Catalog.Core.Entities;
+using Catalog.Core.Repositories;
+using Catalog.Persistence.InMemory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Catalog.Api.Test.Repositories

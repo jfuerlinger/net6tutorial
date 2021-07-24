@@ -4,9 +4,12 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Catalog.Api.Repositories;
 using Catalog.Api.Dtos;
-using Catalog.Api.Entities;
+using Microsoft.FeatureManagement;
+using Microsoft.FeatureManagement.Mvc;
+using Catalog.Core.Repositories;
+using Catalog.Core.Entities;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Catalog.Api.Controllers
 {
@@ -14,13 +17,19 @@ namespace Catalog.Api.Controllers
     [Route("[controller]")]
     public class ItemsController : ControllerBase
     {
-        private readonly IItemsRepository _repository;
         private readonly ILogger<ItemsController> _logger;
+        private readonly IFeatureManager _featureManager;
 
-        public ItemsController(IItemsRepository repository, ILogger<ItemsController> logger)
+        private readonly IItemsRepository _repository;
+
+        public ItemsController(
+            ILogger<ItemsController> logger,
+            IFeatureManager featureManager,
+            IItemsRepository repository)
         {
             this._repository = repository;
             this._logger = logger;
+            _featureManager = featureManager;
         }
 
         [HttpGet]
@@ -30,7 +39,7 @@ namespace Catalog.Api.Controllers
                 .GetItemsAsync())
                 .Select(item => item.AsDto());
 
-            _logger.LogInformation($"{DateTime.UtcNow.ToString("hh:mm:ss")}: Fetched {items.Count()} items");
+            _logger.LogInformation($"{DateTime.UtcNow:hh:mm:ss}: Fetched {items.Count()} items");
 
             return items;
         }
@@ -43,7 +52,7 @@ namespace Catalog.Api.Controllers
 
             if (item is null)
             {
-                _logger.LogWarning($"{DateTime.UtcNow.ToString("hh:mm:ss")}: The id {id} does not exist!");
+                _logger.LogWarning($"{DateTime.UtcNow:hh:mm:ss}: The id {id} does not exist!");
 
                 return NotFound();
             }
@@ -90,8 +99,15 @@ namespace Catalog.Api.Controllers
 
 
         [HttpDelete("{id}")]
+        [FeatureGate("DeleteItemEnabled")]
         public async Task<ActionResult> DeleteItemAsync(Guid id)
         {
+            bool isDeleteItemEnabled = await _featureManager.IsEnabledAsync("DeleteItemEnabled");
+            if(!isDeleteItemEnabled)
+            {
+                return BadRequest("This feature ist not released yet!");
+            }
+
 
             var existingItem = await _repository.GetItemAsync(id);
             if (existingItem is null)

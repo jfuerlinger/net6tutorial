@@ -5,7 +5,10 @@ on:
   
   push:
     paths:
+      - 'Catalog.Core*/**'
+      - 'Catalog.Persistence*/**'
       - 'Catalog.Api*/**'
+      
     branches: [ main ]
         
   pull_request:
@@ -37,7 +40,7 @@ jobs:
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
     - run: |
-        docker build ./Catalog.Api --file ./Catalog.Api/Dockerfile --tag ${{ secrets.REGISTRY_LOGIN_SERVER }}/catalog:latest
+        docker build . --tag ${{ secrets.REGISTRY_LOGIN_SERVER }}/catalog:latest
         docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/catalog:latest
         
   sonarcloud:
@@ -69,5 +72,5 @@ jobs:
           dotnet restore
           dotnet build 
           dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput='${{github.workspace}}/coverage.opencover.xml' 
-          dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"          
+          dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}" 
         
