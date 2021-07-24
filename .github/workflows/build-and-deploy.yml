@@ -69,5 +69,12 @@ jobs:
           dotnet restore
           dotnet build 
           dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput='${{github.workspace}}/coverage.opencover.xml' 
-          dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"          
+          dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}" 
+          
+      - name: SonarQube Quality Gate check
+        uses: sonarsource/sonarqube-quality-gate-action@master
+        with:
+          timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         
