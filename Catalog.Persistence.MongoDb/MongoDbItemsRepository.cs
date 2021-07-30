@@ -12,49 +12,49 @@ namespace Catalog.Persistence.MongoDb
     [ExcludeFromCodeCoverage]
     public class MongoDbItemsRepository : IItemsRepository
     {
-        private const string databaseName = "catalog";
-        private const string collectionName = "items";
+        private const string _databaseName = "catalog";
+        private const string _collectionName = "items";
 
-        private readonly FilterDefinitionBuilder<Item> filterBuilder = Builders<Item>.Filter;
+        private readonly FilterDefinitionBuilder<Item> _filterBuilder = Builders<Item>.Filter;
 
-        private readonly IMongoCollection<Item> itemsCollection;
+        private readonly IMongoCollection<Item> _itemsCollection;
 
         public MongoDbItemsRepository(IMongoClient mongoClient)
         {
-            IMongoDatabase database = mongoClient.GetDatabase(databaseName);
-            itemsCollection = database.GetCollection<Item>(collectionName);
+            IMongoDatabase database = mongoClient.GetDatabase(_databaseName);
+            _itemsCollection = database.GetCollection<Item>(_collectionName);
         }
 
         public async Task CreateItemAsync(Item item)
         {
-            await itemsCollection.InsertOneAsync(item);
+            await _itemsCollection.InsertOneAsync(item);
         }
 
         public async Task DeleteItemAsync(Guid id)
         {
-            var filter = filterBuilder.Eq(existingItem => existingItem.Id, id);
-            await itemsCollection.DeleteOneAsync(filter);
+            var filter = _filterBuilder.Eq(existingItem => existingItem.Id, id);
+            await _itemsCollection.DeleteOneAsync(filter);
 
             await Task.CompletedTask;
         }
 
         public async Task<Item> GetItemAsync(Guid id)
         {
-            var filter = filterBuilder.Eq(item => item.Id, id);
-            return (await itemsCollection.FindAsync(filter))
+            var filter = _filterBuilder.Eq(item => item.Id, id);
+            return (await _itemsCollection.FindAsync(filter))
                         .SingleOrDefault();
         }
 
         public async Task<IEnumerable<Item>> GetItemsAsync()
         {
-            return (await itemsCollection.FindAsync(new BsonDocument()))
+            return (await _itemsCollection.FindAsync(new BsonDocument()))
                         .ToList();
         }
 
         public async Task UpdateItemAsync(Item item)
         {
-            var filter = filterBuilder.Eq(existingItem => existingItem.Id, item.Id);
-            await itemsCollection.ReplaceOneAsync(filter, item);
+            var filter = _filterBuilder.Eq(existingItem => existingItem.Id, item.Id);
+            await _itemsCollection.ReplaceOneAsync(filter, item);
 
             await Task.CompletedTask;
         }
