@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using Moq;
 
 using Catalog.Api.Controllers;
@@ -18,11 +18,10 @@ using Microsoft.FeatureManagement;
 
 namespace Catalog.Api.Test.Controllers
 {
-    [TestClass]
     [ExcludeFromCodeCoverage]
     public class ItemsControllerTests
     {
-        [TestMethod]
+        [Fact]
         public async Task GetItemsAsync_Call_ShouldReturnFakedDtosAsync()
         {
             // Arrange
@@ -49,10 +48,10 @@ namespace Catalog.Api.Test.Controllers
             var result = await controller.GetItemsAsync();
 
             // Test
-            Assert.IsTrue(result.Count() == 3);
+            Assert.True(result.Count() == 3);
         }
 
-        [TestMethod]
+        [Fact]
         public async Task GetItemAsync_CallWithExistingId_ShouldReturnCorrectDtoAsync()
         {
             // Arrange
@@ -83,15 +82,15 @@ namespace Catalog.Api.Test.Controllers
             // Assert
             itemsRepositoryMock.Verify(foo => foo.GetItemAsync(It.IsAny<Guid>()), Times.Once);
 
-            Assert.IsNotNull(result);
-            Assert.IsNotNull(okResult);
-            Assert.AreEqual(StatusCodes.Status200OK, okResult.StatusCode);
-            Assert.IsInstanceOfType(okResult.Value, typeof(ItemDto));
-            Assert.IsNotNull(itemDto);
-            Assert.IsTrue(itemDto.Id == items.ElementAt(1).Id);
+            Assert.NotNull(result);
+            Assert.NotNull(okResult);
+            Assert.Equal(StatusCodes.Status200OK, okResult.StatusCode);
+            Assert.IsType<ItemDto>(okResult.Value);
+            Assert.NotNull(itemDto);
+            Assert.True(itemDto.Id == items.ElementAt(1).Id);
         }
 
-        [TestMethod]
+        [Fact]
         public async Task GetItemAsync_CallWithNonExistingId_ShouldReturn404Async()
         {
             // Arrange
@@ -121,16 +120,16 @@ namespace Catalog.Api.Test.Controllers
             // Assert
             itemsRepositoryMock.Verify(foo => foo.GetItemAsync(It.IsAny<Guid>()), Times.Once);
 
-            Assert.IsNotNull(result);
-            Assert.IsNotNull(notFoundResult);
-            Assert.AreEqual(StatusCodes.Status404NotFound, notFoundResult.StatusCode);
+            Assert.NotNull(result);
+            Assert.NotNull(notFoundResult);
+            Assert.Equal(StatusCodes.Status404NotFound, notFoundResult.StatusCode);
         }
 
-        [TestMethod]
+        [Fact]
         public async Task CreateItemAsync_CallWithValidParameters_ShouldReturn201()
         {
             // Arrange
-            CreateItemDto createItemDto = new CreateItemDto()
+            CreateItemDto createItemDto = new()
             {
                 Name = "item 1",
                 Price = 15
@@ -163,22 +162,22 @@ namespace Catalog.Api.Test.Controllers
             // Assert
             itemsRepositoryMock.Verify(foo => foo.CreateItemAsync(It.IsAny<Item>()), Times.Once);
 
-            Assert.IsNotNull(result);
-            Assert.IsNotNull(createdAtActionResult);
-            Assert.AreEqual(StatusCodes.Status201Created, createdAtActionResult.StatusCode);
-            Assert.IsTrue(createdAtActionResult.RouteValues.Single().Key.Equals("id", StringComparison.InvariantCultureIgnoreCase));
-            Assert.IsTrue(Guid.Parse(createdAtActionResult.RouteValues.Single().Value.ToString()) == items.Single().Value.Id);
-            Assert.IsInstanceOfType(createdAtActionResult.Value, typeof(ItemDto));
-            Assert.IsNotNull(itemDto);
-            Assert.IsTrue(items.Count == 1);
-            Assert.IsTrue(items.First().Value.Id == itemDto.Id);
+            Assert.NotNull(result);
+            Assert.NotNull(createdAtActionResult);
+            Assert.Equal(StatusCodes.Status201Created, createdAtActionResult.StatusCode);
+            Assert.True(createdAtActionResult.RouteValues.Single().Key.Equals("id", StringComparison.InvariantCultureIgnoreCase));
+            Assert.True(Guid.Parse(createdAtActionResult.RouteValues.Single().Value.ToString()) == items.Single().Value.Id);
+            Assert.IsType<ItemDto>(createdAtActionResult.Value);
+            Assert.NotNull(itemDto);
+            Assert.True(items.Count == 1);
+            Assert.True(items.First().Value.Id == itemDto.Id);
         }
 
-        [TestMethod]
+        [Fact]
         public async Task DeleteItemAsync_Call_ShouldReturnNoContent()
         {
             // Arrange
-            CreateItemDto createItemDto = new CreateItemDto()
+            CreateItemDto createItemDto = new()
             {
                 Name = "item 1",
                 Price = 15
@@ -241,19 +240,19 @@ namespace Catalog.Api.Test.Controllers
             var notFoundResult = getItemResult.Result as NotFoundResult;
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.IsNotNull(createdAtActionResult);
-            Assert.AreEqual(StatusCodes.Status201Created, createdAtActionResult.StatusCode);
-            Assert.IsTrue(createdAtActionResult.RouteValues.Single().Key.Equals("id", StringComparison.InvariantCultureIgnoreCase));
-            Assert.IsTrue(Guid.Parse(createdAtActionResult.RouteValues.Single().Value.ToString()) == itemDto.Id);
-            Assert.IsInstanceOfType(createdAtActionResult.Value, typeof(ItemDto));
-            Assert.IsNotNull(itemDto);
-            Assert.IsNotNull(noContentResult);
-            Assert.AreEqual(noContentResult.StatusCode, StatusCodes.Status204NoContent);
-            Assert.AreEqual(notFoundResult.StatusCode, StatusCodes.Status404NotFound);
+            Assert.NotNull(result);
+            Assert.NotNull(createdAtActionResult);
+            Assert.Equal(StatusCodes.Status201Created, createdAtActionResult.StatusCode);
+            Assert.True(createdAtActionResult.RouteValues.Single().Key.Equals("id", StringComparison.InvariantCultureIgnoreCase));
+            Assert.True(Guid.Parse(createdAtActionResult.RouteValues.Single().Value.ToString()) == itemDto.Id);
+            Assert.IsType<ItemDto>(createdAtActionResult.Value);
+            Assert.NotNull(itemDto);
+            Assert.NotNull(noContentResult);
+            Assert.Equal(noContentResult.StatusCode, StatusCodes.Status204NoContent);
+            Assert.Equal(notFoundResult.StatusCode, StatusCodes.Status404NotFound);
         }
 
-        [TestMethod]
+        [Fact]
         public async Task DeleteItemAsync_CallWithFeatureDisabled_ShouldReturnBadRequest()
         {
             // Arrange
@@ -274,12 +273,12 @@ namespace Catalog.Api.Test.Controllers
             var badRequestObjectResult = await controller.DeleteItemAsync(Guid.NewGuid()) as BadRequestObjectResult;
             
             // Assert
-            Assert.IsNotNull(badRequestObjectResult);
-            Assert.AreEqual(StatusCodes.Status400BadRequest, badRequestObjectResult.StatusCode);
-            Assert.AreEqual("This feature ist not released yet!", badRequestObjectResult.Value);
+            Assert.NotNull(badRequestObjectResult);
+            Assert.Equal(StatusCodes.Status400BadRequest, badRequestObjectResult.StatusCode);
+            Assert.Equal("This feature ist not released yet!", badRequestObjectResult.Value);
         }
 
-        [TestMethod]
+        [Fact]
         public async Task DeleteItemAsync_CallWithUnknownId_ShouldReturnNoFound()
         {
             // Arrange
@@ -333,11 +332,11 @@ namespace Catalog.Api.Test.Controllers
             var notFoundResult = await controller.DeleteItemAsync(Guid.NewGuid()) as NotFoundResult;
 
             // Assert
-            Assert.IsNotNull(notFoundResult);
-            Assert.AreEqual(StatusCodes.Status404NotFound, notFoundResult.StatusCode);
+            Assert.NotNull(notFoundResult);
+            Assert.Equal(StatusCodes.Status404NotFound, notFoundResult.StatusCode);
         }
 
-        [TestMethod]
+        [Fact]
         public async Task UpdateItemAsync_CallWithUnknownId_ShouldReturnNoFound()
         {
             // Arrange
@@ -387,11 +386,11 @@ namespace Catalog.Api.Test.Controllers
             var notFoundResult = await controller.UpdateItemAsync(Guid.NewGuid(), new UpdateItemDto()) as NotFoundResult;
 
             // Assert
-            Assert.IsNotNull(notFoundResult);
-            Assert.AreEqual(StatusCodes.Status404NotFound, notFoundResult.StatusCode);
+            Assert.NotNull(notFoundResult);
+            Assert.Equal(StatusCodes.Status404NotFound, notFoundResult.StatusCode);
         }
 
-        [TestMethod]
+        [Fact]
         public async Task UpdateItemAsync_CallWithKnownId_ShouldUpdateValue()
         {
             // Arrange
@@ -472,12 +471,12 @@ namespace Catalog.Api.Test.Controllers
             var getItemResultOkObjectResult = getItemResult.Result as OkObjectResult;
             var getItemResultValue = getItemResultOkObjectResult.Value as ItemDto;
 
-            Assert.IsNotNull(createItemResult);
-            Assert.IsNotNull(resultUpdate);
-            Assert.AreEqual(StatusCodes.Status204NoContent, resultUpdate.StatusCode);
+            Assert.NotNull(createItemResult);
+            Assert.NotNull(resultUpdate);
+            Assert.Equal(StatusCodes.Status204NoContent, resultUpdate.StatusCode);
 
-            Assert.AreEqual("item 2", getItemResultValue?.Name);
-            Assert.AreEqual(20, getItemResultValue?.Price);
+            Assert.Equal("item 2", getItemResultValue?.Name);
+            Assert.Equal(20, getItemResultValue?.Price);
         }
     }
 }

@@ -1,15 +1,14 @@
 ﻿using Catalog.Core.Entities;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using Xunit;
 
 namespace Catalog.Api.Test
 {
-    [TestClass]
     [ExcludeFromCodeCoverage]
     public class ExtensionsTests
     {
-        [TestMethod]
+        [Fact]
         public void AsDto_Call_ShouldConvertToDto()
         {
             // Arrange
@@ -25,10 +24,10 @@ namespace Catalog.Api.Test
             var dto = item.AsDto();
 
             // Assert
-            Assert.IsTrue(condition: item.Id == dto.Id);
-            Assert.IsTrue(condition: item.Name == dto.Name);
-            Assert.IsTrue(condition: item.CreatedDate == dto.CreatedDate);
-            Assert.IsTrue(condition: item.Price == dto.Price);
+            Assert.True(condition: item.Id == dto.Id);
+            Assert.True(condition: item.Name == dto.Name);
+            Assert.True(condition: item.CreatedDate == dto.CreatedDate);
+            Assert.True(condition: item.Price == dto.Price);
         }
     }
 }

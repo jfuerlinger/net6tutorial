@@ -1,17 +1,16 @@
 ﻿using Catalog.Core.Entities;
 using Catalog.Core.Repositories;
 using Catalog.Persistence.InMemory;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace Catalog.Api.Test.Repositories
 {
-    [TestClass]
     public class InMemItemsRepositoryTests
     {
-        [TestMethod]
+        [Fact]
         public async Task GetItemsAsync_Call_ShouldReturnCorrectItems()
         {
             // Arrange
@@ -21,11 +20,11 @@ namespace Catalog.Api.Test.Repositories
             var items = await repo.GetItemsAsync();
 
             // Assert
-            Assert.IsNotNull(items);
-            Assert.AreEqual(3, items.Count());
+            Assert.NotNull(items);
+            Assert.Equal(3, items.Count());
         }
 
-        [TestMethod]
+        [Fact]
         public async Task GetItemAsync_Call_ShouldReturnCorrectItem()
         {
             // Arrange
@@ -36,12 +35,12 @@ namespace Catalog.Api.Test.Repositories
             var firstItem = await repo.GetItemAsync(items.First().Id);
 
             // Assert
-            Assert.IsNotNull(items);
-            Assert.IsNotNull(firstItem);
-            Assert.AreEqual(firstItem.Id, items.First().Id);
+            Assert.NotNull(items);
+            Assert.NotNull(firstItem);
+            Assert.Equal(firstItem.Id, items.First().Id);
         }
 
-        [TestMethod]
+        [Fact]
         public async Task CreateItemAsync_Call_ShouldStoreCorrectItem()
         {
             // Arrange
@@ -60,11 +59,11 @@ namespace Catalog.Api.Test.Repositories
             var createdItem = await repo.GetItemAsync(newItem.Id);
 
             // Assert
-            Assert.IsNotNull(createdItem);
-            Assert.AreSame(newItem, createdItem);
+            Assert.NotNull(createdItem);
+            Assert.Same(newItem, createdItem);
         }
 
-        [TestMethod]
+        [Fact]
         public async Task DeleteItemAsync_Call_ShouldRemoveItem()
         {
             // Arrange
@@ -85,9 +84,9 @@ namespace Catalog.Api.Test.Repositories
             var createdItemAfterRemoval = await repo.GetItemAsync(newItem.Id);
 
             // Assert
-            Assert.IsNotNull(createdItem);
-            Assert.AreSame(newItem, createdItem);
-            Assert.IsNull(createdItemAfterRemoval);
+            Assert.NotNull(createdItem);
+            Assert.Same(newItem, createdItem);
+            Assert.Null(createdItemAfterRemoval);
         }
 
     }

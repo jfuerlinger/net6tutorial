@@ -1,17 +1,11 @@
 ﻿using Catalog.Api.Settings;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Xunit;
 
 namespace Catalog.Api.Test.Settings
 {
-    [TestClass]
     public class MongoDbSettingsTests
     {
-        [TestMethod]
+        [Fact]
         public void GetConnectionString_CallGetter_ShouldDeliverCorrectConnectionString()
         {
             // Arrange
@@ -27,8 +21,8 @@ namespace Catalog.Api.Test.Settings
             var connectionString = mongoDbSettings.ConnectionString;
 
             // Assert
-            Assert.IsNotNull(connectionString);
-            Assert.AreEqual("mongodb://user1:password@localhost:80", connectionString);
+            Assert.NotNull(connectionString);
+            Assert.Equal("mongodb://user1:password@localhost:80", connectionString);
         }
     }
 }
