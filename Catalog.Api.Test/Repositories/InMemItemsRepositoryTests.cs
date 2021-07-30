@@ -1,7 +1,6 @@
 ﻿using Catalog.Core.Entities;
 using Catalog.Core.Repositories;
 using Catalog.Persistence.InMemory;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -10,12 +9,12 @@ namespace Catalog.Api.Test.Repositories
 {
     public class InMemItemsRepositoryTests
     {
-        [Fact]
-        public async Task GetItemsAsync_Call_ShouldReturnCorrectItems()
+        [Theory]
+        [AutoDomainData]
+        public async Task GetItemsAsync_Call_ShouldReturnCorrectItems(
+            InMemItemsRepository repo)
         {
             // Arrange
-            IItemsRepository repo = new InMemItemsRepository();
-
             // Act
             var items = await repo.GetItemsAsync();
 
@@ -40,20 +39,13 @@ namespace Catalog.Api.Test.Repositories
             Assert.Equal(firstItem.Id, items.First().Id);
         }
 
-        [Fact]
-        public async Task CreateItemAsync_Call_ShouldStoreCorrectItem()
+        [Theory]
+        [AutoDomainData]
+        public async Task CreateItemAsync_Call_ShouldStoreCorrectItem(
+            Item newItem,
+            InMemItemsRepository repo)
         {
             // Arrange
-            IItemsRepository repo = new InMemItemsRepository();
-
-            Item newItem = new()
-            {
-                Id = Guid.NewGuid(),
-                Name = "new item",
-                CreatedDate = DateTime.Now,
-                Price = 18
-            };
-
             // Act
             await repo.CreateItemAsync(newItem);
             var createdItem = await repo.GetItemAsync(newItem.Id);
@@ -63,20 +55,13 @@ namespace Catalog.Api.Test.Repositories
             Assert.Same(newItem, createdItem);
         }
 
-        [Fact]
-        public async Task DeleteItemAsync_Call_ShouldRemoveItem()
+        [Theory]
+        [AutoDomainData]
+        public async Task DeleteItemAsync_Call_ShouldRemoveItem(
+            Item newItem,
+            InMemItemsRepository repo)
         {
             // Arrange
-            IItemsRepository repo = new InMemItemsRepository();
-
-            Item newItem = new()
-            {
-                Id = Guid.NewGuid(),
-                Name = "new item",
-                CreatedDate = DateTime.Now,
-                Price = 18
-            };
-
             // Act
             await repo.CreateItemAsync(newItem);
             var createdItem = await repo.GetItemAsync(newItem.Id);

@@ -1,8 +1,6 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-
-using Microsoft.Extensions.Logging;
 using Xunit;
 using Moq;
 
@@ -15,34 +13,28 @@ using System.Collections.Generic;
 using Catalog.Core.Repositories;
 using Catalog.Core.Entities;
 using Microsoft.FeatureManagement;
+using AutoFixture.Xunit2;
 
 namespace Catalog.Api.Test.Controllers
 {
     [ExcludeFromCodeCoverage]
     public class ItemsControllerTests
     {
-        [Fact]
-        public async Task GetItemsAsync_Call_ShouldReturnFakedDtosAsync()
+        [Theory]
+        [AutoDomainData]
+        public async Task GetItemsAsync_Call_ShouldReturnFakedDtosAsync(
+            [Frozen] Mock<IItemsRepository> itemsRepositoryMock,
+            [Greedy] ItemsController controller)
         {
             // Arrange
-
             var items = (new Item[] {
                 new Item() { Id = Guid.NewGuid(),  Name="item 1"},
                 new Item() { Id = Guid.NewGuid(),  Name="item 2"},
                 new Item() { Id = Guid.NewGuid(),  Name="item 3"}
             }).AsEnumerable();
 
-            var itemsRepositoryMock = new Mock<IItemsRepository>();
             itemsRepositoryMock.Setup(foo => foo.GetItemsAsync().Result)
                 .Returns(items);
-
-            var loggerMock = new Mock<ILogger<ItemsController>>();
-            var featureManagerMock = new Mock<IFeatureManager>();
-
-            var controller = new ItemsController(
-                loggerMock.Object,
-                featureManagerMock.Object,
-                itemsRepositoryMock.Object);
 
             // Act
             var result = await controller.GetItemsAsync();
@@ -51,8 +43,11 @@ namespace Catalog.Api.Test.Controllers
             Assert.True(result.Count() == 3);
         }
 
-        [Fact]
-        public async Task GetItemAsync_CallWithExistingId_ShouldReturnCorrectDtoAsync()
+        [Theory]
+        [AutoDomainData]
+        public async Task GetItemAsync_CallWithExistingId_ShouldReturnCorrectDtoAsync(
+            [Frozen] Mock<IItemsRepository> itemsRepositoryMock,
+            [Greedy] ItemsController controller)
         {
             // Arrange
             var items = (new Item[] {
@@ -61,18 +56,9 @@ namespace Catalog.Api.Test.Controllers
                 new Item() { Id = Guid.NewGuid(),  Name="item 3"}
             }).AsEnumerable();
 
-            var itemsRepositoryMock = new Mock<IItemsRepository>();
             itemsRepositoryMock
                 .Setup(foo => foo.GetItemAsync(It.IsNotNull<Guid>()))
                 .Returns<Guid>((id) => Task.FromResult(items.FirstOrDefault(item => item.Id == id)));
-
-            var loggerMock = new Mock<ILogger<ItemsController>>();
-            var featureManagerMock = new Mock<IFeatureManager>();
-
-            var controller = new ItemsController(
-                loggerMock.Object,
-                featureManagerMock.Object,
-                itemsRepositoryMock.Object);
 
             // Act
             var result = await controller.GetItemAsync(items.ElementAt(1).Id);
@@ -90,8 +76,11 @@ namespace Catalog.Api.Test.Controllers
             Assert.True(itemDto.Id == items.ElementAt(1).Id);
         }
 
-        [Fact]
-        public async Task GetItemAsync_CallWithNonExistingId_ShouldReturn404Async()
+        [Theory]
+        [AutoDomainData]
+        public async Task GetItemAsync_CallWithNonExistingId_ShouldReturn404Async(
+            [Frozen] Mock<IItemsRepository> itemsRepositoryMock,
+            [Greedy] ItemsController controller)
         {
             // Arrange
             var items = (new Item[] {
@@ -100,18 +89,9 @@ namespace Catalog.Api.Test.Controllers
                 new Item() { Id = Guid.NewGuid(),  Name="item 3"}
             }).AsEnumerable();
 
-            var itemsRepositoryMock = new Mock<IItemsRepository>();
             itemsRepositoryMock
                 .Setup(foo => foo.GetItemAsync(It.IsNotNull<Guid>()))
                 .Returns<Guid>(id => Task.FromResult(items.FirstOrDefault(item => item.Id == id)));
-
-            var loggerMock = new Mock<ILogger<ItemsController>>();
-            var featureManagerMock = new Mock<IFeatureManager>();
-
-            var controller = new ItemsController(
-                loggerMock.Object,
-                featureManagerMock.Object,
-                itemsRepositoryMock.Object);
 
             // Act
             var result = await controller.GetItemAsync(Guid.NewGuid());
@@ -125,19 +105,16 @@ namespace Catalog.Api.Test.Controllers
             Assert.Equal(StatusCodes.Status404NotFound, notFoundResult.StatusCode);
         }
 
-        [Fact]
-        public async Task CreateItemAsync_CallWithValidParameters_ShouldReturn201()
+        [Theory]
+        [AutoDomainData]
+        public async Task CreateItemAsync_CallWithValidParameters_ShouldReturn201(
+            [Frozen] Mock<IItemsRepository> itemsRepositoryMock,
+            [Greedy] ItemsController controller,
+            CreateItemDto createItemDto)
         {
             // Arrange
-            CreateItemDto createItemDto = new()
-            {
-                Name = "item 1",
-                Price = 15
-            };
-
             Dictionary<Guid, Item> items = new();
 
-            var itemsRepositoryMock = new Mock<IItemsRepository>();
             itemsRepositoryMock
                 .Setup(foo => foo.CreateItemAsync(It.IsNotNull<Item>()))
                 .Returns<Item>((item) =>
@@ -145,14 +122,6 @@ namespace Catalog.Api.Test.Controllers
                     items[item.Id] = item;
                     return Task.CompletedTask;
                 });
-
-            var loggerMock = new Mock<ILogger<ItemsController>>();
-            var featureManagerMock = new Mock<IFeatureManager>();
-
-            var controller = new ItemsController(
-                loggerMock.Object,
-                featureManagerMock.Object,
-                itemsRepositoryMock.Object);
 
             // Act
             var result = await controller.CreateItemAsync(createItemDto);
@@ -173,19 +142,17 @@ namespace Catalog.Api.Test.Controllers
             Assert.True(items.First().Value.Id == itemDto.Id);
         }
 
-        [Fact]
-        public async Task DeleteItemAsync_Call_ShouldReturnNoContent()
+        [Theory]
+        [AutoDomainData]
+        public async Task DeleteItemAsync_Call_ShouldReturnNoContent(
+            [Frozen] Mock<IItemsRepository> itemsRepositoryMock,
+            [Frozen] Mock<IFeatureManager> featureManagerMock,
+            [Greedy] ItemsController controller,
+            CreateItemDto createItemDto)
         {
             // Arrange
-            CreateItemDto createItemDto = new()
-            {
-                Name = "item 1",
-                Price = 15
-            };
-
             Dictionary<Guid, Item> items = new();
 
-            var itemsRepositoryMock = new Mock<IItemsRepository>();
             itemsRepositoryMock
                 .Setup(foo => foo.CreateItemAsync(It.IsNotNull<Item>()))
                 .Returns<Item>((item) =>
@@ -216,18 +183,9 @@ namespace Catalog.Api.Test.Controllers
                     return Task.CompletedTask;
                 });
 
-
-            var loggerMock = new Mock<ILogger<ItemsController>>();
-
-            var featureManagerMock = new Mock<IFeatureManager>();
             featureManagerMock
                 .Setup(foo => foo.IsEnabledAsync(It.IsAny<string>()))
                 .Returns<string>(featureName => featureName == "DeleteItemEnabled" ? Task.FromResult(true) : Task.FromResult(false));
-
-            var controller = new ItemsController(
-                loggerMock.Object,
-                featureManagerMock.Object,
-                itemsRepositoryMock.Object);
 
             var result = await controller.CreateItemAsync(createItemDto);
             var createdAtActionResult = result.Result as CreatedAtActionResult;
@@ -252,39 +210,36 @@ namespace Catalog.Api.Test.Controllers
             Assert.Equal(notFoundResult.StatusCode, StatusCodes.Status404NotFound);
         }
 
-        [Fact]
-        public async Task DeleteItemAsync_CallWithFeatureDisabled_ShouldReturnBadRequest()
+        [Theory]
+        [AutoDomainData]
+        public async Task DeleteItemAsync_CallWithFeatureDisabled_ShouldReturnBadRequest(
+            [Frozen] Mock<IFeatureManager> featureManagerMock,
+            [Greedy] ItemsController controller)
         {
             // Arrange
-            var itemsRepositoryMock = new Mock<IItemsRepository>();
-            var loggerMock = new Mock<ILogger<ItemsController>>();
-            
-            var featureManagerMock = new Mock<IFeatureManager>();
             featureManagerMock
                 .Setup(foo => foo.IsEnabledAsync(It.IsAny<string>()))
                 .Returns<string>(featureName => Task.FromResult(false));
 
-            var controller = new ItemsController(
-                loggerMock.Object,
-                featureManagerMock.Object,
-                itemsRepositoryMock.Object);
-
             // Act
             var badRequestObjectResult = await controller.DeleteItemAsync(Guid.NewGuid()) as BadRequestObjectResult;
-            
+
             // Assert
             Assert.NotNull(badRequestObjectResult);
             Assert.Equal(StatusCodes.Status400BadRequest, badRequestObjectResult.StatusCode);
             Assert.Equal("This feature ist not released yet!", badRequestObjectResult.Value);
         }
 
-        [Fact]
-        public async Task DeleteItemAsync_CallWithUnknownId_ShouldReturnNoFound()
+        [Theory]
+        [AutoDomainData]
+        public async Task DeleteItemAsync_CallWithUnknownId_ShouldReturnNoFound(
+            [Frozen] Mock<IItemsRepository> itemsRepositoryMock,
+            [Frozen] Mock<IFeatureManager> featureManagerMock,
+            [Greedy] ItemsController controller)
         {
             // Arrange
             Dictionary<Guid, Item> items = new();
 
-            var itemsRepositoryMock = new Mock<IItemsRepository>();
             itemsRepositoryMock
                 .Setup(foo => foo.CreateItemAsync(It.IsNotNull<Item>()))
                 .Returns<Item>((item) =>
@@ -316,17 +271,9 @@ namespace Catalog.Api.Test.Controllers
                 });
 
 
-            var loggerMock = new Mock<ILogger<ItemsController>>();
-
-            var featureManagerMock = new Mock<IFeatureManager>();
             featureManagerMock
                 .Setup(foo => foo.IsEnabledAsync(It.IsAny<string>()))
                 .Returns<string>(featureName => featureName == "DeleteItemEnabled" ? Task.FromResult(true) : Task.FromResult(false));
-
-            var controller = new ItemsController(
-                loggerMock.Object,
-                featureManagerMock.Object,
-                itemsRepositoryMock.Object);
 
             // Act
             var notFoundResult = await controller.DeleteItemAsync(Guid.NewGuid()) as NotFoundResult;
@@ -336,13 +283,15 @@ namespace Catalog.Api.Test.Controllers
             Assert.Equal(StatusCodes.Status404NotFound, notFoundResult.StatusCode);
         }
 
-        [Fact]
-        public async Task UpdateItemAsync_CallWithUnknownId_ShouldReturnNoFound()
+        [Theory]
+        [AutoDomainData]
+        public async Task UpdateItemAsync_CallWithUnknownId_ShouldReturnNoFound(
+            [Frozen] Mock<IItemsRepository> itemsRepositoryMock,
+            [Greedy] ItemsController controller)
         {
             // Arrange
             Dictionary<Guid, Item> items = new();
 
-            var itemsRepositoryMock = new Mock<IItemsRepository>();
             itemsRepositoryMock
                 .Setup(foo => foo.CreateItemAsync(It.IsNotNull<Item>()))
                 .Returns<Item>((item) =>
@@ -373,15 +322,6 @@ namespace Catalog.Api.Test.Controllers
                     return Task.CompletedTask;
                 });
 
-
-            var loggerMock = new Mock<ILogger<ItemsController>>();
-            var featureManagerMock = new Mock<IFeatureManager>();
-
-            var controller = new ItemsController(
-                loggerMock.Object,
-                featureManagerMock.Object,
-                itemsRepositoryMock.Object);
-
             // Act
             var notFoundResult = await controller.UpdateItemAsync(Guid.NewGuid(), new UpdateItemDto()) as NotFoundResult;
 
@@ -390,13 +330,17 @@ namespace Catalog.Api.Test.Controllers
             Assert.Equal(StatusCodes.Status404NotFound, notFoundResult.StatusCode);
         }
 
-        [Fact]
-        public async Task UpdateItemAsync_CallWithKnownId_ShouldUpdateValue()
+        [Theory]
+        [AutoDomainData]
+        public async Task UpdateItemAsync_CallWithKnownId_ShouldUpdateValue(
+            [Frozen] Mock<IItemsRepository> itemsRepositoryMock,
+            [Greedy] ItemsController controller,
+            CreateItemDto newItem,
+            UpdateItemDto updateItem)
         {
             // Arrange
             Dictionary<Guid, Item> items = new();
 
-            var itemsRepositoryMock = new Mock<IItemsRepository>();
             itemsRepositoryMock
                 .Setup(foo => foo.CreateItemAsync(It.IsNotNull<Item>()))
                 .Returns<Item>((item) =>
@@ -441,23 +385,7 @@ namespace Catalog.Api.Test.Controllers
                     items.Remove(id);
                     return Task.CompletedTask;
                 });
-
-
-            var loggerMock = new Mock<ILogger<ItemsController>>();
-            var featureManagerMock = new Mock<IFeatureManager>();
-
-            var controller = new ItemsController(
-                loggerMock.Object,
-                featureManagerMock.Object,
-                itemsRepositoryMock.Object);
-
-            var newItem = new CreateItemDto()
-            {
-                Name = "item 1",
-                Price = 24
-            };
-
-
+            
 
             // Act
             var createItemResult = await controller.CreateItemAsync(newItem);
@@ -465,8 +393,8 @@ namespace Catalog.Api.Test.Controllers
             var createItemResultValue = createItemResultCreatedAtActionResult.Value as ItemDto;
 
             var newItemId = createItemResultValue.Id;
-            var resultUpdate = await controller.UpdateItemAsync(newItemId, new UpdateItemDto() { Name = "item 2", Price = 20 }) as NoContentResult;
-            
+            var resultUpdate = await controller.UpdateItemAsync(newItemId, updateItem) as NoContentResult;
+
             var getItemResult = await controller.GetItemAsync(newItemId);
             var getItemResultOkObjectResult = getItemResult.Result as OkObjectResult;
             var getItemResultValue = getItemResultOkObjectResult.Value as ItemDto;
@@ -475,8 +403,8 @@ namespace Catalog.Api.Test.Controllers
             Assert.NotNull(resultUpdate);
             Assert.Equal(StatusCodes.Status204NoContent, resultUpdate.StatusCode);
 
-            Assert.Equal("item 2", getItemResultValue?.Name);
-            Assert.Equal(20, getItemResultValue?.Price);
+            Assert.Equal(updateItem.Name, getItemResultValue?.Name);
+            Assert.Equal(updateItem.Price, getItemResultValue?.Price);
         }
     }
 }
