@@ -62,12 +62,11 @@ namespace Catalog.Api.Test.Controllers
             // Arrange
             // Act
             var result = await controller.GetItemAsync(Guid.NewGuid());
-            var notFoundResult = result.Result as NotFoundResult;
 
             // Assert
             Assert.NotNull(result);
-            Assert.NotNull(notFoundResult);
-            Assert.Equal(StatusCodes.Status404NotFound, notFoundResult.StatusCode);
+            Assert.IsType<ActionResult<ItemDto>>(result);
+            Assert.IsType<NotFoundObjectResult>(result.Result);
         }
 
         [Theory]
@@ -119,7 +118,7 @@ namespace Catalog.Api.Test.Controllers
             var noContentResult = await controller.DeleteItemAsync(itemDto.Id) as NoContentResult;
 
             var getItemResult = await controller.GetItemAsync(itemDto.Id);
-            var notFoundResult = getItemResult.Result as NotFoundResult;
+            var notFoundResult = getItemResult.Result as NotFoundObjectResult;
 
             // Assert
             Assert.NotNull(result);
@@ -166,7 +165,7 @@ namespace Catalog.Api.Test.Controllers
                 .Returns<string>(featureName => featureName == nameof(Feature.DeleteItemEnabled) ? Task.FromResult(true) : Task.FromResult(false));
 
             // Act
-            var notFoundResult = await controller.DeleteItemAsync(Guid.NewGuid()) as NotFoundResult;
+            var notFoundResult = await controller.DeleteItemAsync(Guid.NewGuid()) as NotFoundObjectResult;
 
             // Assert
             Assert.NotNull(notFoundResult);
@@ -180,7 +179,7 @@ namespace Catalog.Api.Test.Controllers
         {
             // Arrange
             // Act
-            var notFoundResult = await controller.UpdateItemAsync(Guid.NewGuid(), new UpdateItemDto()) as NotFoundResult;
+            var notFoundResult = await controller.UpdateItemAsync(Guid.NewGuid(), new UpdateItemDto()) as NotFoundObjectResult;
 
             // Assert
             Assert.NotNull(notFoundResult);
