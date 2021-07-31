@@ -54,7 +54,7 @@ namespace Catalog.Api.Controllers
             {
                 _logger.LogWarning($"{DateTime.UtcNow:hh:mm:ss}: The id {id} does not exist!");
 
-                return NotFound();
+                return NotFound(id);
             }
 
             return Ok(item.AsDto());
@@ -83,7 +83,7 @@ namespace Catalog.Api.Controllers
             var existingItem = await _repository.GetItemAsync(id);
             if (existingItem is null)
             {
-                return NotFound();
+                return NotFound(id);
             }
 
             Item updatedItem = existingItem with
@@ -112,7 +112,7 @@ namespace Catalog.Api.Controllers
             var existingItem = await _repository.GetItemAsync(id);
             if (existingItem is null)
             {
-                return NotFound();
+                return NotFound(id);
             }
 
             await _repository.DeleteItemAsync(existingItem.Id);
